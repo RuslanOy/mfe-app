@@ -1,27 +1,20 @@
-interface RemoteConfig {
-  devUrl: string;
-  prodUrl: string;
-}
-
-const REMOTE_CONFIGS: Record<string, RemoteConfig> = {
-  header: {
-    devUrl: 'http://localhost:3001/mfe-header/remoteEntry.js',
-    prodUrl: 'https://ruslanoy.github.io/mfe-header/remoteEntry.js',
-  },
-  footer: {
-    devUrl: 'http://localhost:3002/mfe-footer/remoteEntry.js',
-    prodUrl: 'https://ruslanoy.github.io/mfe-footer/remoteEntry.js',
-  },
-};
-
 export const initializeRemotes = async () => {
-  const isProd = process.env.NODE_ENV === 'production';
+  const isDev = window.location.hostname === 'localhost';
+  
+  const REMOTE_URLS = {
+    header: isDev
+      ? 'http://localhost:3001/mfe-header/remoteEntry.js'
+      : 'https://ruslanoy.github.io/mfe-header/remoteEntry.js',
 
-  await Promise.all(
-    Object.entries(REMOTE_CONFIGS).map(([name, urls]) =>
-      loadRemote(name, isProd ? urls.prodUrl : urls.devUrl)
-    )
-  );
+    footer: isDev
+      ? 'http://localhost:3002/mfe-footer/remoteEntry.js'
+      : 'https://ruslanoy.github.io/mfe-footer/remoteEntry.js',
+  };
+
+  await Promise.all([
+    loadRemote('header', REMOTE_URLS.header),
+    loadRemote('footer', REMOTE_URLS.footer),
+  ]);
 };
 
 const loadRemote = (name: string, url: string) => {
