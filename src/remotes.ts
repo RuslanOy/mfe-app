@@ -1,39 +1,32 @@
 export const initializeRemotes = async () => {
-  const isDev = window.location.hostname === 'localhost';
+  const isLocal = window.location.host.includes('localhost');
   
-  const REMOTE_URLS = {
-    header: isDev
-      ? 'http://localhost:3001/mfe-header/remoteEntry.js'
-      : 'https://ruslanoy.github.io/mfe-header/remoteEntry.js',
-
-    footer: isDev
-      ? 'http://localhost:3002/mfe-footer/remoteEntry.js'
-      : 'https://ruslanoy.github.io/mfe-footer/remoteEntry.js',
+  const REMOTES = {
+    header: isLocal 
+      ? 'http://localhost:3001/remoteEntry.js'
+      : '/mfe-header/remoteEntry.js',
+    footer: isLocal
+      ? 'http://localhost:3002/remoteEntry.js'
+      : '/mfe-footer/remoteEntry.js'
   };
 
-  await Promise.all([
-    loadRemote('header', REMOTE_URLS.header),
-    loadRemote('footer', REMOTE_URLS.footer),
-  ]);
+  try {
+    await Promise.all([
+      loadScript('header', REMOTES.header),
+      loadScript('footer', REMOTES.footer)
+    ]);
+    console.log('All remotes loaded successfully');
+  } catch (error) {
+    console.error('Remote loading failed:', error);
+  }
 };
 
-const loadRemote = (name: string, url: string) => {
-  return new Promise((resolve, reject) => {
-    const element = document.createElement('script');
-    element.src = url;
-    element.type = 'text/javascript';
-    element.async = true;
+const loadScript = (name: string, url: string) => new Promise((resolve, reject) => {
+  if (document.querySelector(`script[src="${url}"]`)) return resolve('success');
 
-    element.onload = () => {
-      console.log(`Remote ${name} loaded`);
-      resolve('success');
-    };
-
-    element.onerror = () => {
-      console.error(`Failed to load remote ${name}`);
-      reject();
-    };
-
-    document.head.appendChild(element);
-  });
-};
+  const script = document.createElement('script');
+  script.src = url;
+  script.onload = resolve;
+  script.onerror = () => reject(new Error(`Failed to load ${name}`));
+  document.head.appendChild(script);
+});
