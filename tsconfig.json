@@ -12,8 +12,11 @@
     "types": ["node"],
     "baseUrl": ".",
     "paths": {
-      "process": ["node_modules/process/browser"]
-    }
+      "process": ["node_modules/process/browser"],
+      "header/Header": ["./src/@types/mfe.d.ts"],
+      "footer/Footer": ["./src/@types/mfe.d.ts"]
+    },
+    "typeRoots": ["./node_modules/@types", "./src/@types"]
   },
   "include": ["src"]
 }

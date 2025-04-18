@@ -24,10 +24,6 @@ module.exports = (env) => {
     plugins: [
       new ModuleFederationPlugin({
         name: 'app',
-        remotes: {
-          header: 'header@http://localhost:3001/remoteEntry.js',
-          footer: 'footer@http://localhost:3002/remoteEntry.js',
-        },
         shared: {
           react: {
             singleton: true,
