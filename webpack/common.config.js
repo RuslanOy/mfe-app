@@ -28,12 +28,12 @@ module.exports = (env) => {
           react: {
             singleton: true,
             requiredVersion: '^18.2.0',
-            eager: false
+            eager: false,
           },
           'react-dom': {
             singleton: true,
             requiredVersion: '^18.2.0',
-            eager: false
+            eager: false,
           },
         },
       }),
@@ -43,6 +43,12 @@ module.exports = (env) => {
       new DefinePlugin({
         'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
         'process.env.PUBLIC_URL': JSON.stringify(process.env.PUBLIC_URL),
+        'process.env.HEADER_REMOTE_URL': JSON.stringify({
+          HEADER_REMOTE_URL: process.env.HEADER_REMOTE_URL,
+        }),
+        'process.env.FOOTER_REMOTE_URL': JSON.stringify({
+          FOOTER_REMOTE_URL: process.env.FOOTER_REMOTE_URL,
+        }),
       }),
     ],
   };
