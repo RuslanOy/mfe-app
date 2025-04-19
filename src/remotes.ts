@@ -1,19 +1,8 @@
 export const initializeRemotes = async () => {
-  const isLocal = window.location.host.includes('localhost');
-  
-  const REMOTES = {
-    header: isLocal 
-      ? 'http://localhost:3001/remoteEntry.js'
-      : '/mfe-header/remoteEntry.js',
-    footer: isLocal
-      ? 'http://localhost:3002/remoteEntry.js'
-      : '/mfe-footer/remoteEntry.js'
-  };
-
   try {
     await Promise.all([
-      loadScript('header', REMOTES.header),
-      loadScript('footer', REMOTES.footer)
+      loadScript('header', 'https://ruslanoy.github.io/mfe-header/remoteEntry.js'),
+      loadScript('footer', 'https://ruslanoy.github.io/mfe-footer/remoteEntry.js')
     ]);
     console.log('All remotes loaded successfully');
   } catch (error) {
